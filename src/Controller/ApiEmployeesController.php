@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminUser;
+use App\Repository\EmployeeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,12 +55,42 @@ class ApiEmployeesController extends AbstractController
      *      methods={"POST"}
      * )
      */
-    public function add(): Response {
-        return  $this->json([
-            'method' => 'POST',
-            'description' => 'Crea un recurso empleado.',
+    public function add(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $data = $request->request;
 
-        ]);
+        $employee = new AdminUser();
+
+        $employee->setEmail($data->get('email'));
+        $employee->setFirstName($data->get('first_name'));
+        $employee->setLastName($data->get('last_name'));
+        $employee->setPhone($data->get('phone'));
+        $employee->setPassword($data->get('password'));
+        $employee->setClassShift($data->get('class_shift'));
+        $employee->setShiftDuration($data->get('shift_duration'));
+
+        $entityManager->persist($employee);
+        
+        // $employee no tiene id.
+
+        $entityManager->flush();
+
+        dump($employee);
+
+        return $this->json(
+            $employee,
+            Response::HTTP_CREATED,
+            [
+                'Location' => $this->generateUrl(
+                    'api_employees_get',
+                    [
+                        'id' => $employee->getId()
+                    ]
+                )
+            ]
+        );
     }
 
     /**

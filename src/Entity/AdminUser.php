@@ -35,6 +35,31 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", length=128)
+     */
+    private $FirstName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $LastName;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="string", length=128)
+     */
+    private $class_shift;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $shift_duration;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -122,5 +147,65 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->FirstName;
+    }
+
+    public function setFirstName(string $FirstName): self
+    {
+        $this->FirstName = $FirstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->LastName;
+    }
+
+    public function setLastName(string $LastName): self
+    {
+        $this->LastName = $LastName;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getClassShift(): ?string
+    {
+        return $this->class_shift;
+    }
+
+    public function setClassShift(string $class_shift): self
+    {
+        $this->class_shift = $class_shift;
+
+        return $this;
+    }
+
+    public function getShiftDuration(): ?float
+    {
+        return $this->shift_duration;
+    }
+
+    public function setShiftDuration(float $shift_duration): self
+    {
+        $this->shift_duration = $shift_duration;
+
+        return $this;
     }
 }
