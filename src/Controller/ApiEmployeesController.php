@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AdminUser;
-use App\Repository\EmployeeRepository;
+use App\Repository\AdminUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -121,11 +121,26 @@ class ApiEmployeesController extends AbstractController
      *      }
      * )
      */
-    public function remove(int $id): Response
+    public function remove(
+        int $id,
+        EntityManagerInterface $entityManager,
+        AdminUserRepository $employeeRepository
+    ): Response
     {
-        return $this->json([
-            'method' => 'DELETE',
-            'description' => 'Elimina un recurso empleado con id: '.$id.'.',
-        ]);
+        $employee = $employeeRepository->find($id);
+
+        if(!$employee) {
+            return $this->json([
+                'message' => sprintf('No he encontrado el empledo con id.: %s', $id)
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        dump($employee);
+
+        // remove() prepara el sistema pero NO ejecuta la sentencia.
+        $entityManager->remove($employee);
+        $entityManager->flush();
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }
