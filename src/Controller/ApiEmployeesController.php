@@ -103,12 +103,33 @@ class ApiEmployeesController extends AbstractController
      *      }
      * )
      */
-    public function update(int $id): Response
+    public function update(
+        int $id,
+        EntityManagerInterface $entityManager,
+        AdminUserRepository $employeeRepository,
+        Request $request
+    ): Response
     {
-        return $this->json([
-            'method' => 'PUT',
-            'description' => 'Actualiza un recurso empleado con id: '.$id.'.',
-        ]);
+        $employee = $employeeRepository->find($id);
+
+        if(!$employee) {
+            return $this->json([
+                'message' => sprintf('No he encontrado el empledo con id.: %s', $id)
+            ], Response::HTTP_NOT_FOUND);
+        }
+        $data = $request->request;
+
+        $employee->setEmail($data->get('email'));
+        $employee->setFirstName($data->get('first_name'));
+        $employee->setLastName($data->get('last_name'));
+        $employee->setPhone($data->get('phone'));
+        $employee->setPassword($data->get('password'));
+        $employee->setClassShift($data->get('class_shift'));
+        $employee->setShiftDuration($data->get('shift_duration'));
+
+        $entityManager->flush();
+
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
