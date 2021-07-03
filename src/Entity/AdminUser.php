@@ -6,6 +6,7 @@ use App\Repository\AdminUserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AdminUserRepository::class)
@@ -21,6 +22,10 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * 
+     * @Assert\Email(
+     *      message = "El correo {{ value }} no tiene un formato válido."
+     * )
      */
     private $email;
 
@@ -37,11 +42,15 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=128)
+     * 
+     * @Assert\NotBlank
      */
     private $FirstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * 
+     * 
      */
     private $LastName;
 
