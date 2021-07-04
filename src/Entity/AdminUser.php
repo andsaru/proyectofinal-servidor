@@ -230,4 +230,24 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getAnnouncements(): ?Announcements
+    {
+        return $this->announcements;
+    }
+    public function setAnnouncements(?Announcements $announcements): self
+    {
+        $this->$announcements = $announcements;
+        return $this;
+    }
+
+    public function getShifts(): ?Shifts
+    {
+        return $this->announcements;
+    }
+    public function setShifts(?Shifts $shifts): self
+    {
+        $this->$shifts = $shifts;
+        return $this;
+    }
 }

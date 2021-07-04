@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\AdminUser;
 use App\Repository\AdminUserRepository;
+use App\Service\EmployeeNormalize;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,13 +24,27 @@ class ApiEmployeesController extends AbstractController
      *      methods={"GET"}
      * )
      */
-    public function index(Request $request, AdminUserRepository $employeeRepository): Response
+    public function index(Request $request, AdminUserRepository $employeeRepository, EmployeeNormalize $employeeNormalize): Response
     {
         if($request->query->has('term')) {
-            $people = $employeeRepository->findByTerm($request->query->get('term'));
-            return $this->json($people);
+            $result = $employeeRepository->findByTerm($request->query->get('term'));
+            $data = [];
+
+            foreach($result as $employee) {
+                $data[] = $employeeNormalize->employeeNormalize($employee);   
+            }
+
+            return $this->json($data);
         }
-        return $this->json($employeeRepository->findAll());
+
+        $result = $employeeRepository->findAll();
+
+        $data = [];
+
+        foreach($result as $employee) {
+            $data[] = $employeeNormalize->employeeNormalize($employee); 
+        }
+        return $this->json($data);
     }
 
     /**
@@ -42,12 +57,12 @@ class ApiEmployeesController extends AbstractController
      *      }
      * )
      */
-    public function show(int $id, AdminUserRepository $employeeRepository): Response
+    public function show(
+        AdminUser $employee,
+        EmployeeNormalize $employeeNormalize
+    ): Response
     {
-        $data = $employeeRepository->find($id);
-        dump($id);
-        dump($data);
-        return $this->json($data);
+        return $this->json($employeeNormalize->employeeNormalize($employee));
     }
 
     /**
