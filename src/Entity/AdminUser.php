@@ -54,6 +54,16 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenExpiration;
+
+    /**
      * @ORM\Column(type="string", length=128)
      * 
      * @Assert\NotBlank
@@ -169,6 +179,30 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getTokenExpiration(): ?\DateTimeInterface
+    {
+        return $this->tokenExpiration;
+    }
+
+    public function setTokenExpiration(?\DateTimeInterface $tokenExpiration): self
+    {
+        $this->tokenExpiration = $tokenExpiration;
+
+        return $this;
     }
 
     public function getFirstName(): ?string
