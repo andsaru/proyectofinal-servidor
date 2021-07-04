@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\AdminUser;
 use App\Repository\AdminUserRepository;
+use App\Repository\AnnouncementsRepository;
+use App\Repository\ShiftsRepository;
 use App\Service\EmployeeNormalize;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,9 +77,15 @@ class ApiEmployeesController extends AbstractController
     public function add(
         Request $request,
         EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        AnnouncementsRepository $announcementsRepository,
+        ShiftsRepository $shiftsRepository,
+        EmployeeNormalize $employeeNormalize
     ): Response {
         $data = $request->request;
+
+        $announcements = $announcementsRepository->find($data->get('announcements_id'));
+        $shifts = $shiftsRepository->find($data->get('shifts_id'));
 
         $employee = new AdminUser();
 
@@ -88,6 +96,8 @@ class ApiEmployeesController extends AbstractController
         $employee->setPassword($data->get('password'));
         $employee->setClassShift($data->get('class_shift'));
         $employee->setShiftDuration($data->get('shift_duration'));
+        $employee->setAnnouncements($announcements);
+        $employee->setShifts($shifts);
 
         $errors = $validator->validate($employee);
 
@@ -115,7 +125,7 @@ class ApiEmployeesController extends AbstractController
         $entityManager->flush();
 
         return $this->json(
-            $employee,
+            $employeeNormalize->employeeNormalize($employee),
             Response::HTTP_CREATED,
             [
                 'Location' => $this->generateUrl(
