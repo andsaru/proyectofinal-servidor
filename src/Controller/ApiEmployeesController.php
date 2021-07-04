@@ -123,6 +123,8 @@ class ApiEmployeesController extends AbstractController
             } catch (FileException $e) {
                 throw new \Exception($e->getMessage());
             }
+            
+            $employee->setAvatar($avatarNewFilename);
         }
 
         die();
