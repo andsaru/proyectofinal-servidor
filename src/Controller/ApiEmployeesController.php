@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/api/amazing-employees", name="api_employees_")
@@ -60,12 +61,15 @@ class ApiEmployeesController extends AbstractController
      *          "id": "\d+"
      *      }
      * )
+     * 
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(
         AdminUser $employee,
-        EmployeeNormalize $employeeNormalize
+        EmployeeNormalize $employeeNormalize,
     ): Response
     {
+        dump($this->getUser());
         return $this->json($employeeNormalize->employeeNormalize($employee));
     }
 
