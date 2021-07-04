@@ -20,6 +20,11 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Shifts", mappedBy="adminuser")
      */
     private $shifts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Announcements", mappedBy="adminuser")
+     */
+    private $announcements;
     
     /**
      * @ORM\Id

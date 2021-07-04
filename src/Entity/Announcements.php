@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Announcements
 {
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\AdminUser", inversedBy="announcements")
+     */
+    private $adminuser;
+
+    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")

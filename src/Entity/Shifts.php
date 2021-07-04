@@ -16,16 +16,16 @@ class Shifts
     private $adminuser;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Positions", inversedBy="shifts")
+     */
+    private $positions;
+
+    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
-    private $position;
 
     /**
      * @ORM\Column(type="date")
@@ -35,18 +35,6 @@ class Shifts
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPosition(): ?string
-    {
-        return $this->position;
-    }
-
-    public function setPosition(string $position): self
-    {
-        $this->position = $position;
-
-        return $this;
     }
 
     public function getDate(): ?\DateTimeInterface

@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Positions
 {
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Shifts", mappedBy="positions")
+     */
+    private $shifts;
+
+    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
