@@ -14,7 +14,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity("email")
  */
 class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
-{
+{   
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Shifts", mappedBy="adminuser")
+     */
+    private $shifts;
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
