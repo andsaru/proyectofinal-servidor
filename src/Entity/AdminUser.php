@@ -231,6 +231,23 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
     public function getAnnouncements(): ?Announcements
     {
         return $this->announcements;
@@ -250,4 +267,6 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->$shifts = $shifts;
         return $this;
     }
+
+
 }
