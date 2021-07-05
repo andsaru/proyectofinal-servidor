@@ -17,11 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
 {   
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Shifts", mappedBy="adminuser")
-     */
-    private $shifts;
     
     /**
      * @ORM\Id
@@ -272,9 +267,15 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $announcements;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Shifts::class, mappedBy="adminUser")
+     */
+    private $shifts;
+
     public function __construct()
     {
         $this->announcements = new ArrayCollection();
+        $this->shifts = new ArrayCollection();
     }
 
     public function getAvatar(): ?string
@@ -286,16 +287,6 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->avatar = $avatar;
 
-        return $this;
-    }
-
-    public function getShifts(): ?Shifts
-    {
-        return $this->announcements;
-    }
-    public function setShifts(?Shifts $shifts): self
-    {
-        $this->$shifts = $shifts;
         return $this;
     }
 
@@ -329,5 +320,33 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection|Shifts[]
+     */
+    public function getShifts(): Collection
+    {
+        return $this->shifts;
+    }
 
+    public function addShift(Shifts $shift): self
+    {
+        if (!$this->shifts->contains($shift)) {
+            $this->shifts[] = $shift;
+            $shift->setAdminUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShift(Shifts $shift): self
+    {
+        if ($this->shifts->removeElement($shift)) {
+            // set the owning side to null (unless already changed)
+            if ($shift->getAdminUser() === $this) {
+                $shift->setAdminUser(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -10,15 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Shifts
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\AdminUser", inversedBy="shifts")
-     */
-    private $adminuser;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Positions", inversedBy="shifts")
-     */
-    private $positions;
 
     /**
      * @ORM\Id
@@ -31,6 +22,17 @@ class Shifts
      * @ORM\Column(type="date")
      */
     private $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=AdminUser::class, inversedBy="shifts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $adminUser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Positions::class, inversedBy="position")
+     */
+    private $positions;
 
     public function getId(): ?int
     {
@@ -45,6 +47,30 @@ class Shifts
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getAdminUser(): ?AdminUser
+    {
+        return $this->adminUser;
+    }
+
+    public function setAdminUser(?AdminUser $adminUser): self
+    {
+        $this->adminUser = $adminUser;
+
+        return $this;
+    }
+
+    public function getPositions(): ?Positions
+    {
+        return $this->positions;
+    }
+
+    public function setPositions(?Positions $positions): self
+    {
+        $this->positions = $positions;
 
         return $this;
     }

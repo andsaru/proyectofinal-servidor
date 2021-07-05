@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PositionsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +29,16 @@ class Positions
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Shifts::class, mappedBy="positions")
+     */
+    private $position;
+
+    public function __construct()
+    {
+        $this->position = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -40,6 +52,36 @@ class Positions
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Shifts[]
+     */
+    public function getPosition(): Collection
+    {
+        return $this->position;
+    }
+
+    public function addPosition(Shifts $position): self
+    {
+        if (!$this->position->contains($position)) {
+            $this->position[] = $position;
+            $position->setPositions($this);
+        }
+
+        return $this;
+    }
+
+    public function removePosition(Shifts $position): self
+    {
+        if ($this->position->removeElement($position)) {
+            // set the owning side to null (unless already changed)
+            if ($position->getPositions() === $this) {
+                $position->setPositions(null);
+            }
+        }
 
         return $this;
     }
