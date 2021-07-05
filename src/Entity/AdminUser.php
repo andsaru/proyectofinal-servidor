@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AdminUserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,11 +22,6 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Shifts", mappedBy="adminuser")
      */
     private $shifts;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Announcements", mappedBy="adminuser")
-     */
-    private $announcements;
     
     /**
      * @ORM\Id
@@ -270,6 +267,16 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $avatar;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Announcements::class, mappedBy="adminUser", orphanRemoval=true)
+     */
+    private $announcements;
+
+    public function __construct()
+    {
+        $this->announcements = new ArrayCollection();
+    }
+
     public function getAvatar(): ?string
     {
         return $this->avatar;
@@ -282,16 +289,6 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAnnouncements(): ?Announcements
-    {
-        return $this->announcements;
-    }
-    public function setAnnouncements(?Announcements $announcements): self
-    {
-        $this->$announcements = $announcements;
-        return $this;
-    }
-
     public function getShifts(): ?Shifts
     {
         return $this->announcements;
@@ -299,6 +296,36 @@ class AdminUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setShifts(?Shifts $shifts): self
     {
         $this->$shifts = $shifts;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Announcements[]
+     */
+    public function getAnnouncements(): Collection
+    {
+        return $this->announcements;
+    }
+
+    public function addAnnouncement(Announcements $announcement): self
+    {
+        if (!$this->announcements->contains($announcement)) {
+            $this->announcements[] = $announcement;
+            $announcement->setAdminUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnouncement(Announcements $announcement): self
+    {
+        if ($this->announcements->removeElement($announcement)) {
+            // set the owning side to null (unless already changed)
+            if ($announcement->getAdminUser() === $this) {
+                $announcement->setAdminUser(null);
+            }
+        }
+
         return $this;
     }
 

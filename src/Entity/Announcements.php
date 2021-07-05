@@ -11,11 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Announcements
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\AdminUser", inversedBy="announcements")
-     */
-    private $adminuser;
-
-    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -36,6 +31,12 @@ class Announcements
      * @ORM\Column(type="string", length=5000)
      */
     private $content;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=AdminUser::class, inversedBy="announcements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $adminUser;
 
     public function getId(): ?int
     {
@@ -74,6 +75,18 @@ class Announcements
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getAdminUser(): ?AdminUser
+    {
+        return $this->adminUser;
+    }
+
+    public function setAdminUser(?AdminUser $adminUser): self
+    {
+        $this->adminUser = $adminUser;
 
         return $this;
     }
