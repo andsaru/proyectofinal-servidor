@@ -50,8 +50,6 @@ class EmployeeNormalize {
                     'name' => $shift->getPositions()->getName(),
                 ];
             }
-
-
             array_push($shifts, $shiftData);
         }
 
