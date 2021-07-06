@@ -21,18 +21,38 @@ class EmployeeNormalize {
      * @return array|null
      */
     public function employeeNormalize (AdminUser $employee): ?array {
-        // $positionss = [];
-
-        // foreach($employee->getPositions() as $position) {
-        //     array_push($projects, [
-        //         'id' => $position->getId(),    
-        //         'name' => $position->getName(),    
-        //     ]);
-        // }
 
         $avatar = '';
         if($employee->getAvatar()) {
             $avatar = $this->urlHelper->getAbsoluteUrl('/adminuser/avatar/'.$employee->getAvatar());
+        }
+
+        $announcements = [];
+        foreach($employee->getAnnouncements() as $announcement) {
+            array_push($announcements, [
+                'id' => $announcement->getId(),
+                'date' => $announcement->getDate(),
+                'title' => $announcement->getTitle(),
+                'content' => $announcement->getContent(),
+            ]);
+        }
+
+        $shifts = [];
+        foreach($employee->getShifts() as $shift) {
+            $shiftData = [
+                'id' => $shift->getId(),
+                'date' => $shift->getDate(),
+            ];
+
+            if ($shift->getPositions()) {
+                $shiftData['position'] = [
+                    'id' => $shift->getPositions()->getId(),
+                    'name' => $shift->getPositions()->getName(),
+                ];
+            }
+
+
+            array_push($shifts, $shiftData);
         }
 
         return [
@@ -42,16 +62,9 @@ class EmployeeNormalize {
             'phone' => $employee->getPhone(),
             'class_shift' => $employee->getClassShift(),
             'shift_duration' => $employee->getShiftDuration(),
-            'announcements' => [
-                'id' => $employee->getAnnouncements()->getId(),
-                'date' => $employee->getAnnouncements()->getDate(),
-                'title' => $employee->getAnnouncements()->getTitle(),
-                'content' => $employee->getAnnouncements()->getContent(),
-            ],
-            'shifts' => [
-                'id' => $employee->getShifts()->getId(),
-                'date' => $employee->getShifts()->getDate(),
-            ],
+            'announcements' => $announcements,
+            'shifts' => $shifts,
+
             'avatar' => $avatar
         ];    
     }

@@ -16,16 +16,6 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        # api:
-        #     pattern: ^/api
-        #     provider: app_user_provider
-        #     json_login:
-        #         check_path: /api/login
-                ## Indicar expresamente los parámetros de
-                ## las credenciales si son distintos de
-                ## username y password
-                # username_path: email
-                # password_path: pass
         api_login:
             pattern: ^/api/login
             stateless: true
@@ -39,15 +29,6 @@ security:
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
-        main:
-            lazy: true
-            provider: app_user_provider
-            custom_authenticator: App\Security\FormLoginAuthenticator
-            logout:
-                path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -57,9 +38,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/default, roles: ROLE_USER }
-        # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
-        # - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/api, roles: ROLE_USER }

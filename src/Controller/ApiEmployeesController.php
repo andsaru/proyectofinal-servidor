@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\AdminUser;
+use App\Entity\Positions;
 use App\Repository\AdminUserRepository;
 use App\Repository\AnnouncementsRepository;
+use App\Repository\PositionsRepository;
 use App\Repository\ShiftsRepository;
 use App\Service\EmployeeNormalize;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,10 +68,15 @@ class ApiEmployeesController extends AbstractController
      */
     public function show(
         AdminUser $employee,
+        PositionsRepository $positionsRepository,
+        AnnouncementsRepository $announcementsRepository,
+        ShiftsRepository $shiftsRepository,
         EmployeeNormalize $employeeNormalize
     ): Response
     {
         dump($this->getUser());
+        // $announcements = $announcementsRepository->find($data->get('announcements_id'));
+        // $shifts = $shiftsRepository->find($data->get('shifts_id'));
         return $this->json($employeeNormalize->employeeNormalize($employee));
     }
 
@@ -84,18 +91,21 @@ class ApiEmployeesController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
+        PositionsRepository $positionsRepository,
         AnnouncementsRepository $announcementsRepository,
         ShiftsRepository $shiftsRepository,
         EmployeeNormalize $employeeNormalize,
         SluggerInterface $slug
     ): Response {
-        $data = $request->request;
+        $data = json_decode($request->getContent());
 
         dump($data);
-        dump($request->files);
+        dump($data->email);
+        die();
+        // dump($request->files);
 
-        $announcements = $announcementsRepository->find($data->get('announcements_id'));
-        $shifts = $shiftsRepository->find($data->get('shifts_id'));
+        // $announcements = $announcementsRepository->find($data->get('announcements_id'));
+        // $shifts = $shiftsRepository->find($data->get('shifts_id'));
 
         $employee = new AdminUser();
 
@@ -106,8 +116,8 @@ class ApiEmployeesController extends AbstractController
         $employee->setPassword($data->get('password'));
         $employee->setClassShift($data->get('class_shift'));
         $employee->setShiftDuration($data->get('shift_duration'));
-        $employee->setAnnouncements($announcements);
-        $employee->setShifts($shifts);
+        // $employee->setAnnouncements($announcements);
+        // $employee->setShifts($shifts);
 
         if($request->files->has('avatar')) {
             $avatarFile = $request->files->get('avatar');
