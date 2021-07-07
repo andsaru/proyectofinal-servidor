@@ -108,12 +108,12 @@ class ApiEmployeesController extends AbstractController
 
         $employee = new AdminUser();
 
-        $employee->setEmail($data->get('email'));
-        $employee->setFirstName($data->get('first_name'));
-        $employee->setLastName($data->get('last_name'));
-        $employee->setPhone($data->get('phone'));
-        $employee->setClassShift($data->get('class_shift'));
-        $employee->setShiftDuration($data->get('shift_duration'));
+        $employee->setEmail($data->email);
+        $employee->setFirstName($data->first_name);
+        $employee->setLastName($data->last_name);
+        $employee->setPhone($data->phone);
+        $employee->setClassShift($data->class_shift);
+        $employee->setShiftDuration($data->shift_duration);
 
         $passwordHashed = $hasher->hashPassword($employee, $data->password);
         $employee->setPassword($passwordHashed);
@@ -142,7 +142,7 @@ class ApiEmployeesController extends AbstractController
             $employee->setAvatar($avatarNewFilename);
         }
 
-        die();
+        //die();
 
         $errors = $validator->validate($employee);
 
