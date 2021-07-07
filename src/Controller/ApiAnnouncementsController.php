@@ -7,19 +7,23 @@ use App\Repository\AnnouncementsRepository;
 use App\Service\AnnouncementsNormalize;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+/**
+* @Route("/api/announcements", name="api_announcements_")
+*/
 class ApiAnnouncementsController extends AbstractController
 {
+
     /**
-     * @Route("/api/announcements", name="api_announcements")
+     * @Route(
+     *      "",
+     *      name="cget",
+     *      methods={"GET"}
+     * )
      */
     public function index(Request $request, AnnouncementsRepository $announcementsRepository, AnnouncementsNormalize $announcementsNormalize): Response
     {
@@ -54,7 +58,6 @@ class ApiAnnouncementsController extends AbstractController
      *      }
      * )
      * 
-     * @IsGranted("ROLE_ADMIN")
      */
     public function show(
         Announcements $announcements,
@@ -77,7 +80,7 @@ class ApiAnnouncementsController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
-        AnnouncementsNormalize $announcementsNormalize,
+        AnnouncementsNormalize $announcementsNormalize
     ): Response {
         $data = json_decode($request->getContent());
 
@@ -88,8 +91,9 @@ class ApiAnnouncementsController extends AbstractController
 
         $announcements = new Announcements();
 
-        $announcements->setDate($data->get('date'));
-        $announcements->setContent($data->get('content'));
+        $announcements->setDate(new \DateTimeImmutable());
+        $announcements->setContent($data->content);
+        $announcements->setAdminUser($this->getUser());
 
         $errors = $validator->validate($announcements);
 

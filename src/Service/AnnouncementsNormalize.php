@@ -27,6 +27,8 @@ class AnnouncementsNormalize {
             'date' => $announcements->getDate(),
             // 'title' => $announcements->getTitle(),
             'content' => $announcements->getContent(),
+            'user' => ['firstname'=> $announcements->getAdminUser()->getFirstName()]
+            
         ];    
     }
 }

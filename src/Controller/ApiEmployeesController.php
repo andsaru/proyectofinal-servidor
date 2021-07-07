@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @Route("/api/amazing-employees", name="api_employees_")
@@ -68,9 +69,6 @@ class ApiEmployeesController extends AbstractController
      */
     public function show(
         AdminUser $employee,
-        PositionsRepository $positionsRepository,
-        AnnouncementsRepository $announcementsRepository,
-        ShiftsRepository $shiftsRepository,
         EmployeeNormalize $employeeNormalize
     ): Response
     {
@@ -95,13 +93,14 @@ class ApiEmployeesController extends AbstractController
         AnnouncementsRepository $announcementsRepository,
         ShiftsRepository $shiftsRepository,
         EmployeeNormalize $employeeNormalize,
-        SluggerInterface $slug
+        SluggerInterface $slug,
+        UserPasswordHasherInterface $hasher
     ): Response {
         $data = json_decode($request->getContent());
-
-        dump($data);
-        dump($data->email);
-        die();
+   
+        // dump($data);
+        // dump($data->email);
+        // die(
         // dump($request->files);
 
         // $announcements = $announcementsRepository->find($data->get('announcements_id'));
@@ -113,9 +112,11 @@ class ApiEmployeesController extends AbstractController
         $employee->setFirstName($data->get('first_name'));
         $employee->setLastName($data->get('last_name'));
         $employee->setPhone($data->get('phone'));
-        $employee->setPassword($data->get('password'));
         $employee->setClassShift($data->get('class_shift'));
         $employee->setShiftDuration($data->get('shift_duration'));
+
+        $passwordHashed = $hasher->hashPassword($employee, $data->password);
+        $employee->setPassword($passwordHashed);
         // $employee->setAnnouncements($announcements);
         // $employee->setShifts($shifts);
 

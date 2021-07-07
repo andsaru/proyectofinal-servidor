@@ -27,15 +27,15 @@ class EmployeeNormalize {
             $avatar = $this->urlHelper->getAbsoluteUrl('/adminuser/avatar/'.$employee->getAvatar());
         }
 
-        $announcements = [];
-        foreach($employee->getAnnouncements() as $announcement) {
-            array_push($announcements, [
-                'id' => $announcement->getId(),
-                'date' => $announcement->getDate(),
-                'title' => $announcement->getTitle(),
-                'content' => $announcement->getContent(),
-            ]);
-        }
+        // $announcements = [];
+        // foreach($employee->getAnnouncements() as $announcement) {
+        //     array_push($announcements, [
+        //         'id' => $announcement->getId(),
+        //         'date' => $announcement->getDate(),
+        //         'title' => $announcement->getTitle(),
+        //         'content' => $announcement->getContent(),
+        //     ]);
+        // }
 
         $shifts = [];
         foreach($employee->getShifts() as $shift) {
@@ -60,7 +60,7 @@ class EmployeeNormalize {
             'phone' => $employee->getPhone(),
             'class_shift' => $employee->getClassShift(),
             'shift_duration' => $employee->getShiftDuration(),
-            'announcements' => $announcements,
+            //'announcements' => $announcements,
             'shifts' => $shifts,
 
             'avatar' => $avatar

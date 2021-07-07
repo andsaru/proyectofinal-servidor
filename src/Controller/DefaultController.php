@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController 
 {
     /**
-     * @Route("/default", name="default_index")
+     * @Route("/", name="default_index")
      * 
      * La clase ruta debe estar precedida en los comentario por una arroba.
      * El primer parámetro de Route es la URL a la que queremos asociar la acción.
