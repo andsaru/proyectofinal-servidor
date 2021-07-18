@@ -54,6 +54,7 @@ class EmployeeNormalize {
         }
 
         return [
+            'id' => $employee->getId(),
             'first_name' => $employee->getFirstName(),
             'last_name' => $employee->getLastName(),
             'email' => $employee->getEmail(),

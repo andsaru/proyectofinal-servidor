@@ -197,25 +197,30 @@ class ApiEmployeesController extends AbstractController
         int $id,
         EntityManagerInterface $entityManager,
         AdminUserRepository $employeeRepository,
-        Request $request
+        Request $request,
+        UserPasswordHasherInterface $hasher
     ): Response
     {
         $employee = $employeeRepository->find($id);
 
         if(!$employee) {
             return $this->json([
-                'message' => sprintf('No he encontrado el empledo con id.: %s', $id)
+                'message' => sprintf('No he encontrado el empleado con id.: %s', $id)
             ], Response::HTTP_NOT_FOUND);
         }
-        $data = $request->request;
+        // Obtienes el contenido de la petición en formato JSON
+        $data = json_decode($request->getContent(), true);
+        $unhashedPassword = $data['password'];
+        $hashedPassword = $hasher->hashPassword($employee, $unhashedPassword);
 
-        $employee->setEmail($data->get('email'));
-        $employee->setFirstName($data->get('first_name'));
-        $employee->setLastName($data->get('last_name'));
-        $employee->setPhone($data->get('phone'));
-        $employee->setPassword($data->get('password'));
-        $employee->setClassShift($data->get('class_shift'));
-        $employee->setShiftDuration($data->get('shift_duration'));
+
+        $employee->setEmail($data['email']);
+        $employee->setFirstName($data['first_name']);
+        $employee->setLastName($data['last_name']);
+        $employee->setPhone($data['phone']);
+        $employee->setPassword($hashedPassword);
+        $employee->setClassShift($data['class_shift']);
+        $employee->setShiftDuration($data['shift_duration']);
 
         $entityManager->flush();
 
